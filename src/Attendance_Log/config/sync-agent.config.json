@@ -1,0 +1,14 @@
+{
+  "deviceConfigs": [
+    {
+      "ipAddress": "192.168.1.225",
+      "port": 4370,
+      "deviceId": 1,
+      "branchId": "branch001",
+      "companyId": "company001"
+    }
+  ],
+  "apiUrl": "https://api.yourdomain.com",
+  "apiToken": "YOUR_SECRET_TOKEN_HERE",
+  "syncInterval": 15
+}

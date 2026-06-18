@@ -1,0 +1,11 @@
+import { Router } from 'express';
+import { AccountsController } from '../../controllers/accounts.controller';
+import { authMiddleware } from '../../middleware/auth.middleware';
+
+const router = Router();
+const accountsController = new AccountsController();
+
+router.get('/dashboard', authMiddleware, accountsController.getDashboard);
+router.get('/reports', authMiddleware, accountsController.getReports);
+
+export default router;
