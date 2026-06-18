@@ -3,11 +3,11 @@ import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
 
-import routes from './routes';
+import routes from './src/routes';
 import {
   errorMiddleware,
   notFoundMiddleware,
-} from './middleware/error.middleware';
+} from './src/middleware/error.middleware';
 
 dotenv.config();
 

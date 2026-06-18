@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 
-export const authenticateApiKey = (req: Request, res: Response, next: NextFunction) => {
+export const authenticateApiKey = (req: Request, res: Response, next: NextFunction): any => {
   const apiKey = req.headers.authorization?.replace("Bearer ", "");
 
   if (!apiKey) {

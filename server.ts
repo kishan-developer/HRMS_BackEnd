@@ -2,8 +2,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import app from './app';
-import { connectDatabase } from './config/database.config';
-import { verifySMTPConnection } from './utils/email.utils';
+import { connectDatabase } from './src/config/database.config';
+import { verifySMTPConnection } from './src/utils/email.utils';
 
 const PORT = process.env.PORT || 5002;
 

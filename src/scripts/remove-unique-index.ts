@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import { Attendance } from '../models/attendance.model';
 import dotenv from 'dotenv';
 
 dotenv.config();

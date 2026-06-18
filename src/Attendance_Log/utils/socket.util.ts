@@ -3,7 +3,7 @@
  * This file can be used in the Next.js frontend to connect to the attendance socket
  */
 
-export const createSocketConnection = (apiUrl: string) => {
+export const createSocketConnection = (_apiUrl: string) => {
   // This would be used in the Next.js frontend
   // import io from "socket.io-client";
   // const socket = io(apiUrl);

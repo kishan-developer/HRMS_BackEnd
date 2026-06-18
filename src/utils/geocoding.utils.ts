@@ -43,7 +43,7 @@ export async function reverseGeocode(latitude: number, longitude: number): Promi
       throw new Error(`Geocoding API error: ${response.status}`);
     }
 
-    const data: NominatimReverseResponse = await response.json();
+    const data = await response.json() as NominatimReverseResponse;
     
     if (!data || !data.address) {
       return `Lat: ${latitude.toFixed(6)}, Long: ${longitude.toFixed(6)}`;

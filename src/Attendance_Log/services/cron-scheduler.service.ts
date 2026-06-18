@@ -7,7 +7,7 @@ import { calculateDailyAttendance } from "../controllers/attendance-calculation.
  */
 
 export class CronSchedulerService {
-  private dailyAttendanceJob: cron.ScheduledTask | null = null;
+  private dailyAttendanceJob: any = null;
 
   startDailyAttendanceCalculation(): void {
     // Run every day at midnight (00:00)
