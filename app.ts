@@ -17,9 +17,24 @@ app.use(helmet());
 
 app.use(
   cors({
-    origin: process.env.NODE_ENV === 'production' 
-      ? process.env.FRONTEND_URL 
-      : true, // Allow all origins in development
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps, curl, postman)
+      if (!origin) return callback(null, true);
+
+      // Allow localhost for development
+      if (origin.includes('localhost') || origin.includes('127.0.0.1') || origin.includes('192.168')) {
+        return callback(null, true);
+      }
+
+      // In production, allow the configured frontend URL
+      if (process.env.NODE_ENV === 'production' && process.env.FRONTEND_URL) {
+        if (origin === process.env.FRONTEND_URL) {
+          return callback(null, true);
+        }
+      }
+
+      callback(null, true); // Allow all origins for now
+    },
     credentials: true,
   }),
 );
