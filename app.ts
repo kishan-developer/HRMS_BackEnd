@@ -19,7 +19,7 @@ app.use(
   cors({
     origin: process.env.NODE_ENV === 'production' 
       ? process.env.FRONTEND_URL 
-      : ['http://localhost:3000', 'http://192.168.1.3:8081', 'exp://192.168.1.3:8081', 'http://localhost:8081', 'exp://localhost:8081'],
+      : true, // Allow all origins in development
     credentials: true,
   }),
 );
@@ -48,3 +48,4 @@ app.use(notFoundMiddleware);
 app.use(errorMiddleware);
 
 export default app;
+3
