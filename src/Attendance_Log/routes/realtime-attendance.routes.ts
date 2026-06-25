@@ -16,7 +16,8 @@ router.all("/test", testRealtimeEndpoint);
 
 // Main endpoint for Realtime Software
 // POST /api/attendance - with Bearer token authentication
-router.post("/attendance", validateRealtimeToken, receiveRealtimeAttendance);
+router.post("/attendance/with-auth", validateRealtimeToken, receiveRealtimeAttendance);// with auth
+router.post("/attendance", receiveRealtimeAttendance); // without auth 
 
 // Admin endpoints (require additional authentication)
 router.get("/attendance", getRealtimeAttendance);
