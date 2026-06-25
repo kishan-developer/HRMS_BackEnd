@@ -14,9 +14,11 @@ const createLeaveValidation = [
   body('reason').notEmpty().withMessage('Reason is required'),
 ];
 
+
 const updateLeaveValidation = [
   body('leaveType').optional().isIn(['Sick Leave', 'Casual Leave', 'Earned Leave', 'Maternity Leave', 'Paternity Leave', 'Unpaid Leave']).withMessage('Invalid leave type'),
 ];
+
 
 router.get('/', authMiddleware, leaveController.getAllLeaves);
 router.get('/my-requests', authMiddleware, leaveController.getMyLeaveRequests);
@@ -29,6 +31,8 @@ router.put('/:id/reject', authMiddleware, param('id').isMongoId(), leaveControll
 router.post('/:id/cancel', authMiddleware, param('id').isMongoId(), leaveController.cancelLeave);
 router.get('/balance/:employeeId', authMiddleware, param('employeeId').isMongoId(), leaveController.getLeaveBalance);
 router.get('/approvals', authMiddleware, leaveController.getLeaveApprovals);
+
+
 
 // Holidays routes
 router.get('/holidays', authMiddleware, (_req: Request, res: Response) => {
