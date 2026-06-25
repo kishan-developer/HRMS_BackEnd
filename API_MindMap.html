@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HRMS Backend API Mind Map</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+
+        .api-url {
+            text-align: center;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            font-family: monospace;
+            font-size: 1.2em;
+            color: #495057;
+            border: 2px solid #dee2e6;
+        }
+
+        .mindmap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .category {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            padding: 20px;
+            min-width: 280px;
+            flex: 1;
+            min-width: 300px;
+            max-width: 400px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .category:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(0,0,0,0.1);
+        }
+
+        .category-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1.2em;
+            color: white;
+            font-weight: bold;
+        }
+
+        .category-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .category-path {
+            font-size: 0.85em;
+            color: #666;
+            font-family: monospace;
+            margin-top: 5px;
+        }
+
+        .endpoints {
+            list-style: none;
+        }
+
+        .endpoint {
+            background: white;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 0.85em;
+            border-left: 3px solid #4CAF50;
+            transition: all 0.2s ease;
+        }
+
+        .endpoint:hover {
+            background: #f0f0f0;
+            border-left-width: 5px;
+        }
+
+        .endpoint.get { border-left-color: #2196F3; }
+        .endpoint.post { border-left-color: #4CAF50; }
+        .endpoint.put { border-left-color: #FF9800; }
+        .endpoint.delete { border-left-color: #f44336; }
+        .endpoint.patch { border-left-color: #9C27B0; }
+
+        .method {
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .method.GET { color: #2196F3; }
+        .method.POST { color: #4CAF50; }
+        .method.PUT { color: #FF9800; }
+        .method.DELETE { color: #f44336; }
+        .method.PATCH { color: #9C27B0; }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 HRMS Backend API Mind Map</h1>
+        <p class="subtitle">Complete API Structure Overview</p>
+        
+        <div class="api-url">
+            <strong>Base URL:</strong> /api/v1
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background: #2196F3;"></div>
+                <span>GET</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #4CAF50;"></div>
+                <span>POST</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #FF9800;"></div>
+                <span>PUT</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #f44336;"></div>
+                <span>DELETE</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #9C27B0;"></div>
+                <span>PATCH</span>
+            </div>
+        </div>
+
+        <div class="mindmap" id="mindmap"></div>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-number" id="totalCategories">0</div>
+                <div class="stat-label">API Categories</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="totalEndpoints">0</div>
+                <div class="stat-label">Total Endpoints</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="totalModules">0</div>
+                <div class="stat-label">Modules</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const apiData = {
+            'Authentication': {
+                icon: '🔐',
+                color: '#ff6b6b',
+                path: '/auth',
+                endpoints: [
+                    { method: 'POST', path: '/register' },
+                    { method: 'POST', path: '/complete-registration' },
+                    { method: 'POST', path: '/login' },
+                    { method: 'POST', path: '/logout' },
+                    { method: 'POST', path: '/refresh-token' },
+                    { method: 'POST', path: '/verify-email' },
+                    { method: 'POST', path: '/forgot-password' },
+                    { method: 'POST', path: '/reset-password' },
+                    { method: 'POST', path: '/resend-otp' }
+                ]
+            },
+            'Employees': {
+                icon: '👥',
+                color: '#4ecdc4',
+                path: '/employees',
+                endpoints: [
+                    { method: 'GET', path: '/' },
+                    { method: 'GET', path: '/:id' },
+                    { method: 'GET', path: '/employee-id/:employeeId' },
+                    { method: 'POST', path: '/' },
+                    { method: 'PUT', path: '/:id' },
+                    { method: 'DELETE', path: '/:id' },
+                    { method: 'GET', path: '/department/:departmentId' },
+                    { method: 'GET', path: '/shift/:shiftId' }
+                ]
+            },
+            'Departments': {
+                icon: '🏢',
+                color: '#45b7d1',
+                path: '/departments',
+                endpoints: [
+                    { method: 'GET', path: '/' },
+                    { method: 'GET', path: '/:id' },
+                    { method: 'POST', path: '/' },
+                    { method: 'PUT', path: '/:id' },
+                    { method: 'DELETE', path: '/:id' }
+                ]
+            },
+            'Shifts': {
+                icon: '⏰',
+                color: '#96ceb4',
+                path: '/shifts',
+                endpoints: [
+                    { method: 'GET', path: '/' },
+                    { method: 'GET', path: '/:id' },
+                    { method: 'POST', path: '/' },
+                    { method: 'PUT', path: '/:id' },
+                    { method: 'DELETE', path: '/:id' }
+                ]
+            },
+            'Attendance': {
+                icon: '📊',
+                color: '#ffeaa7',
+                path: '/attendance',
+                endpoints: [
+                    { method: 'POST', path: '/punch-in' },
+                    { method: 'POST', path: '/punch-out' },
+                    { method: 'GET', path: '/today/:employeeId' },
+                    { method: 'GET', path: '/employee/:employeeId' },
+                    { method: 'GET', path: '/employee/:employeeId/two-months' },
+                    { method: 'POST', path: '/employee/:employeeId/download-report' },
+                    { method: 'POST', path: '/employee/:employeeId/send-report-email' },
+                    { method: 'GET', path: '/all-employees' },
+                    { method: 'GET', path: '/summary' },
+                    { method: 'POST', path: '/check-in' },
+                    { method: 'POST', path: '/check-out' },
+                    { method: 'POST', path: '/break/start' },
+                    { method: 'POST', path: '/break/end' },
+                    { method: 'GET', path: '/my-today' },
+                    { method: 'GET', path: '/my-range' },
+                    { method: 'GET', path: '/my-stats' },
+                    { method: 'GET', path: '/leave-balance' },
+                    { method: 'GET', path: '/calendar' }
+                ]
+            },
+            'Leaves': {
+                icon: '🏖️',
+                color: '#dfe6e9',
+                path: '/leaves',
+                endpoints: [
+                    { method: 'GET', path: '/' },
+                    { method: 'GET', path: '/my-requests' },
+                    { method: 'GET', path: '/my-pending' },
+                    { method: 'GET', path: '/:id' },
+                    { method: 'POST', path: '/' },
+                    { method: 'PUT', path: '/:id' },
+                    { method: 'PUT', path: '/:id/approve' },
+                    { method: 'PUT', path: '/:id/reject' },
+                    { method: 'POST', path: '/:id/cancel' },
+                    { method: 'GET', path: '/balance/:employeeId' },
+                    { method: 'GET', path: '/approvals' },
+                    { method: 'GET', path: '/holidays' },
+                    { method: 'POST', path: '/holidays' },
+                    { method: 'PUT', path: '/holidays/:id' },
+                    { method: 'DELETE', path: '/holidays/:id' },
+                    { method: 'GET', path: '/types' },
+                    { method: 'POST', path: '/types' }
+                ]
+            },
+            'Performance': {
+                icon: '📈',
+                color: '#fd79a8',
+                path: '/performance',
+                endpoints: [
+                    { method: 'GET', path: '/' },
+                    { method: 'GET', path: '/:id' },
+                    { method: 'GET', path: '/employee/:employeeId' },
+                    { method: 'POST', path: '/' },
+                    { method: 'PUT', path: '/:id' },
+                    { method: 'GET', path: '/summary' },
+                    { method: 'GET', path: '/analytics' }
+                ]
+            },
+            'KPIs': {
+                icon: '🎯',
+                color: '#a29bfe',
+                path: '/kpis',
+                endpoints: [
+                    { method: 'GET', path: '/' },
+                    { method: 'GET', path: '/:id' },
+                    { method: 'POST', path: '/' },
+                    { method: 'PUT', path: '/:id' },
+                    { method: 'DELETE', path: '/:id' }
+                ]
+            },
+            'Payroll': {
+                icon: '💰',
+                color: '#fdcb6e',
+                path: '/payroll',
+                endpoints: [
+                    { method: 'GET', path: '/' },
+                    { method: 'POST', path: '/process' },
+                    { method: 'POST', path: '/approve' },
+                    { method: 'GET', path: '/report' },
+                    { method: 'GET', path: '/reimbursement' },
+                    { method: 'GET', path: '/payslip' },
+                    { method: 'GET', path: '/export' }
+                ]
+            },
+            'Payslips': {
+                icon: '📄',
+                color: '#f39c12',
+                path: '/payslips',
+                endpoints: [
+                    { method: 'GET', path: '/' },
+                    { method: 'GET', path: '/:id' },
+                    { method: 'POST', path: '/generate' },
+                    { method: 'GET', path: '/download/:id' }
+                ]
+            },
+            'Loans': {
+                icon: '💳',
+                color: '#e74c3c',
+                path: '/loans',
+                endpoints: [
+                    { method: 'GET', path: '/' },
+                    { method: 'GET', path: '/:id' },
+                    { method: 'POST', path: '/' },
+                    { method: 'PUT', path: '/:id' },
+                    { method: 'DELETE', path: '/:id' }
+                ]
+            },
+            'Reimbursements': {
+                icon: '💸',
+                color: '#9b59b6',
+                path: '/reimbursements',
+                endpoints: [
+                    { method: 'GET', path: '/' },
+                    { method: 'GET', path: '/:id' },
+                    { method: 'POST', path: '/' },
+                    { method: 'PUT', path: '/:id' },
+                    { method: 'DELETE', path: '/:id' }
+                ]
+            },
+            'Companies': {
+                icon: '🏛️',
+                color: '#6c5ce7',
+                path: '/companies',
+                endpoints: [
+                    { method: 'GET', path: '/' },
+                    { method: 'GET', path: '/stats' },
+                    { method: 'GET', path: '/:id' },
+                    { method: 'POST', path: '/' },
+                    { method: 'PUT', path: '/:id' },
+                    { method: 'PATCH', path: '/:id/status' },
+                    { method: 'PATCH', path: '/:id/admin' },
+                    { method: 'DELETE', path: '/:id' }
+                ]
+            },
+            'Users': {
+                icon: '👤',
+                color: '#3498db',
+                path: '/users',
+                endpoints: [
+                    { method: 'GET', path: '/' },
+                    { method: 'GET', path: '/:id' },
+                    { method: 'POST', path: '/' },
+                    { method: 'PUT', path: '/:id' },
+                    { method: 'DELETE', path: '/:id' }
+                ]
+            },
+            'Roles': {
+                icon: '👑',
+                color: '#1abc9c',
+                path: '/roles',
+                endpoints: [
+                    { method: 'GET', path: '/' },
+                    { method: 'GET', path: '/:id' },
+                    { method: 'POST', path: '/' },
+                    { method: 'PUT', path: '/:id' },
+                    { method: 'DELETE', path: '/:id' }
+                ]
+            },
+            'Access Control': {
+                icon: '🔒',
+                color: '#34495e',
+                path: '/access-control',
+                endpoints: [
+                    { method: 'GET', path: '/' },
+                    { method: 'GET', path: '/:id' },
+                    { method: 'POST', path: '/' },
+                    { method: 'PUT', path: '/:id' },
+                    { method: 'DELETE', path: '/:id' }
+                ]
+            },
+            'Biometric': {
+                icon: '🖐️',
+                color: '#00b894',
+                path: '/biometric',
+                endpoints: [
+                    { method: 'POST', path: '/devices' },
+                    { method: 'GET', path: '/devices' },
+                    { method: 'GET', path: '/devices/:deviceId' },
+                    { method: 'PUT', path: '/devices/:deviceId' },
+                    { method: 'DELETE', path: '/devices/:deviceId' },
+                    { method: 'POST', path: '/devices/:deviceId/connect' },
+                    { method: 'POST', path: '/devices/:deviceId/disconnect' },
+                    { method: 'POST', path: '/devices/:deviceId/test' },
+                    { method: 'GET', path: '/devices/:deviceId/info' },
+                    { method: 'GET', path: '/devices/:deviceId/users' },
+                    { method: 'GET', path: '/devices/:deviceId/logs' },
+                    { method: 'POST', path: '/devices/:deviceId/sync' },
+                    { method: 'POST', path: '/devices/:deviceId/sync/range' },
+                    { method: 'POST', path: '/sync-all' }
+                ]
+            },
+            'Mobile': {
+                icon: '📱',
+                color: '#e17055',
+                path: '/mobile',
+                endpoints: [
+                    { method: 'POST', path: '/register-device' },
+                    { method: 'POST', path: '/unregister-device' },
+                    { method: 'POST', path: '/send-push' },
+                    { method: 'GET', path: '/devices/:userId' },
+                    { method: 'POST', path: '/verify-location' },
+                    { method: 'GET', path: '/allowed-locations' },
+                    { method: 'POST', path: '/allowed-locations' },
+                    { method: 'DELETE', path: '/allowed-locations/:id' },
+                    { method: 'POST', path: '/check-in-with-location' },
+                    { method: 'POST', path: '/check-out-with-location' },
+                    { method: 'GET', path: '/dashboard/employee/:userId' },
+                    { method: 'GET', path: '/dashboard/hr-manager/:userId' },
+                    { method: 'GET', path: '/attendance/today-status/:userId' },
+                    { method: 'GET', path: '/leave/balance/:userId' }
+                ]
+            },
+            'Recruitment': {
+                icon: '🎓',
+                color: '#fdcb6e',
+                path: '/recruitment',
+                endpoints: [
+                    { method: 'GET', path: '/jobs' },
+                    { method: 'POST', path: '/jobs' },
+                    { method: 'PUT', path: '/jobs/:id' },
+                    { method: 'DELETE', path: '/jobs/:id' },
+                    { method: 'GET', path: '/candidates' },
+                    { method: 'POST', path: '/candidates' },
+                    { method: 'PUT', path: '/candidates/:id' },
+                    { method: 'DELETE', path: '/candidates/:id' },
+                    { method: 'GET', path: '/interviews' },
+                    { method: 'POST', path: '/interviews' },
+                    { method: 'PUT', path: '/interviews/:id' }
+                ]
+            },
+            'Assets': {
+                icon: '🖥️',
+                color: '#74b9ff',
+                path: '/assets',
+                endpoints: [
+                    { method: 'GET', path: '/' },
+                    { method: 'POST', path: '/' },
+                    { method: 'PUT', path: '/:id' },
+                    { method: 'DELETE', path: '/:id' },
+                    { method: 'GET', path: '/inventory/all' },
+                    { method: 'POST', path: '/:id/assign' }
+                ]
+            },
+            'Reports': {
+                icon: '📋',
+                color: '#55efc4',
+                path: '/reports',
+                endpoints: [
+                    { method: 'GET', path: '/attendance' },
+                    { method: 'GET', path: '/leave' },
+                    { method: 'GET', path: '/performance' }
+                ]
+            },
+            'Support': {
+                icon: '🎧',
+                color: '#a8e6cf',
+                path: '/support',
+                endpoints: [
+                    { method: 'GET', path: '/' },
+                    { method: 'GET', path: '/:id' },
+                    { method: 'POST', path: '/' },
+                    { method: 'PUT', path: '/:id' },
+                    { method: 'DELETE', path: '/:id' }
+                ]
+            },
+            'Onboarding': {
+                icon: '🤝',
+                color: '#dda0dd',
+                path: '/onboarding',
+                endpoints: [
+                    { method: 'GET', path: '/' },
+                    { method: 'GET', path: '/:id' },
+                    { method: 'POST', path: '/' },
+                    { method: 'PUT', path: '/:id' },
+                    { method: 'DELETE', path: '/:id' }
+                ]
+            },
+            'Offboarding': {
+                icon: '👋',
+                color: '#f0e68c',
+                path: '/offboarding',
+                endpoints: [
+                    { method: 'GET', path: '/' },
+                    { method: 'GET', path: '/:id' },
+                    { method: 'POST', path: '/' },
+                    { method: 'PUT', path: '/:id' },
+                    { method: 'DELETE', path: '/:id' }
+                ]
+            },
+            'Overtime': {
+                icon: '⏳',
+                color: '#ff9ff3',
+                path: '/overtime',
+                endpoints: [
+                    { method: 'GET', path: '/' },
+                    { method: 'GET', path: '/:id' },
+                    { method: 'POST', path: '/' },
+                    { method: 'PUT', path: '/:id' },
+                    { method: 'DELETE', path: '/:id' }
+                ]
+            },
+            'Regularization': {
+                icon: '📝',
+                color: '#54a0ff',
+                path: '/regularization',
+                endpoints: [
+                    { method: 'GET', path: '/' },
+                    { method: 'GET', path: '/:id' },
+                    { method: 'POST', path: '/' },
+                    { method: 'PUT', path: '/:id' },
+                    { method: 'DELETE', path: '/:id' }
+                ]
+            },
+            'Notifications': {
+                icon: '🔔',
+                color: '#ff6b81',
+                path: '/notifications',
+                endpoints: [
+                    { method: 'GET', path: '/' },
+                    { method: 'GET', path: '/:id' },
+                    { method: 'POST', path: '/' },
+                    { method: 'PUT', path: '/:id/mark-read' },
+                    { method: 'DELETE', path: '/:id' }
+                ]
+            }
+        };
+
+        function renderMindMap() {
+            const container = document.getElementById('mindmap');
+            let totalEndpoints = 0;
+
+            for (const [category, data] of Object.entries(apiData)) {
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'category';
+                categoryDiv.innerHTML = `
+                    <div class="category-header">
+                        <div class="category-icon" style="background: ${data.color}">
+                            ${data.icon}
+                        </div>
+                        <div>
+                            <div class="category-title">${category}</div>
+                            <div class="category-path">${data.path}</div>
+                        </div>
+                    </div>
+                    <ul class="endpoints">
+                        ${data.endpoints.map(ep => {
+                            totalEndpoints++;
+                            return `<li class="endpoint ${ep.method.toLowerCase()}">
+                                <span class="method ${ep.method}">${ep.method}</span>
+                                ${ep.path}
+                            </li>`;
+                        }).join('')}
+                    </ul>
+                `;
+                container.appendChild(categoryDiv);
+            }
+
+            document.getElementById('totalCategories').textContent = Object.keys(apiData).length;
+            document.getElementById('totalEndpoints').textContent = totalEndpoints;
+            document.getElementById('totalModules').textContent = Object.keys(apiData).length;
+        }
+
+        renderMindMap();
+    </script>
+</body>
+</html>
