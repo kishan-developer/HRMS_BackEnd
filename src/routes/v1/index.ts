@@ -29,6 +29,7 @@ import offboardingRoutes from './offboarding.routes';
 import reportsRoutes from './reports.routes';
 import mobileRoutes from './mobile.routes';
 import biometricRoutes from './biometric.routes';
+import realtimeAttendanceRoutes from '../../Attendance_Log/routes/realtime-attendance.routes';
 
 const router = Router();
 
@@ -61,5 +62,6 @@ router.use('/offboarding', offboardingRoutes);
 router.use('/reports', reportsRoutes);
 router.use('/mobile', mobileRoutes);
 router.use('/biometric', biometricRoutes);
+router.use('/realtime', realtimeAttendanceRoutes);
 
 export default router;

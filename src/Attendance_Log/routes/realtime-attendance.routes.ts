@@ -3,7 +3,8 @@ import {
   testRealtimeEndpoint,
   receiveRealtimeAttendance,
   getRealtimeAttendance,
-  getRealtimeStats
+  getRealtimeStats,
+  sendToThirdPartyAPI
 } from "../controllers/realtime-attendance.controller";
 import { validateRealtimeToken } from "../middleware/realtime-auth.middleware";
 
@@ -20,5 +21,9 @@ router.post("/attendance", validateRealtimeToken, receiveRealtimeAttendance);
 // Admin endpoints (require additional authentication)
 router.get("/attendance", getRealtimeAttendance);
 router.get("/stats", getRealtimeStats);
+
+// Third-party API integration endpoint
+// POST /api/third-party - send attendance data to external biometric API
+router.post("/third-party", sendToThirdPartyAPI);
 
 export default router;

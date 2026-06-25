@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import axios from "axios";
 import RealtimeAttendance from "../models/realtime-attendance.model";
 import { getAttendanceSocket } from "../config/socket.config";
 
@@ -210,5 +211,106 @@ export const getRealtimeStats = async (_req: Request, res: Response) => {
       message: "Internal server error",
       error: error.message
     });
+  }
+};
+
+/**
+ * Send attendance data to third-party biometric API
+ * POST request with Bearer token authentication
+ */
+export const sendToThirdPartyAPI = async (req: Request, res: Response) => {
+  try {
+    const {
+      employee_code,
+      log_datetime,
+      log_time,
+      downloaded_at,
+      device_sn,
+      bearerToken
+    } = req.body;
+
+    // Validate required fields
+    if (!employee_code || !log_datetime || !log_time || !device_sn) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing required fields",
+        required: ["employee_code", "log_datetime", "log_time", "device_sn"]
+      });
+    }
+
+    // Validate Bearer token
+    if (!bearerToken) {
+      return res.status(400).json({
+        success: false,
+        message: "Bearer token is required"
+      });
+    }
+
+    // Third-party API endpoint URL
+    const thirdPartyApiUrl = process.env.THIRD_PARTY_ATTENDANCE_API_URL || "https://example.com/api/attendance-log";
+
+    // Prepare request body
+    const requestBody: any = {
+      employee_code,
+      log_datetime,
+      log_time,
+      device_sn
+    };
+
+    // Add optional downloaded_at if provided
+    if (downloaded_at) {
+      requestBody.downloaded_at = downloaded_at;
+    }
+
+    // Make POST request to third-party API
+    const response = await axios.post(
+      thirdPartyApiUrl,
+      requestBody,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${bearerToken}`
+        }
+      }
+    );
+
+    console.log(`Successfully sent attendance data to third-party API: ${employee_code} at ${log_datetime}`);
+
+    return res.status(200).json({
+      success: true,
+      message: "Attendance data sent to third-party API successfully",
+      data: {
+        employee_code,
+        log_datetime,
+        log_time,
+        device_sn,
+        thirdPartyResponse: response.data
+      }
+    });
+  } catch (error: any) {
+    console.error("Error sending data to third-party API:", error);
+
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      return res.status(error.response.status).json({
+        success: false,
+        message: "Third-party API error",
+        error: error.response.data
+      });
+    } else if (error.request) {
+      // The request was made but no response was received
+      return res.status(503).json({
+        success: false,
+        message: "Third-party API unavailable",
+        error: "No response received from third-party API"
+      });
+    } else {
+      // Something happened in setting up the request
+      return res.status(500).json({
+        success: false,
+        message: "Internal server error",
+        error: error.message
+      });
+    }
   }
 };
