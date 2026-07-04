@@ -46,16 +46,16 @@ const generateAttendanceReportEmail = (
           margin: 0;
           padding: 0;
           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-          background-color: #1a1a1a;
+          background-color: #0f0f0f;
         }
         .email-container {
           max-width: 600px;
           margin: 0 auto;
-          background-color: #2d2d2d;
+          background-color: #1a1a1a;
         }
         .header {
-          background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
-          padding: 30px;
+          background: linear-gradient(135deg, #94cb3d 0%, #7ab32e 100%);
+          padding: 40px 30px;
           text-align: center;
         }
         .header h1 {
@@ -72,7 +72,7 @@ const generateAttendanceReportEmail = (
           opacity: 0.9;
         }
         .content {
-          padding: 30px;
+          padding: 40px 30px;
           color: #e0e0e0;
         }
         .greeting {
@@ -80,15 +80,18 @@ const generateAttendanceReportEmail = (
           margin-bottom: 20px;
         }
         .report-info {
-          background-color: #3d3d3d;
-          border-left: 4px solid #FF6B6B;
-          padding: 15px;
-          margin: 20px 0;
+          background-color: #2a2a2a;
+          border-left: 4px solid #94cb3d;
+          padding: 20px;
+          margin: 25px 0;
           border-radius: 4px;
         }
         .report-info p {
-          margin: 5px 0;
+          margin: 8px 0;
           font-size: 14px;
+        }
+        .report-info strong {
+          color: #94cb3d;
         }
         .stats-grid {
           display: grid;
@@ -97,15 +100,16 @@ const generateAttendanceReportEmail = (
           margin: 25px 0;
         }
         .stat-card {
-          background-color: #3d3d3d;
-          padding: 20px;
+          background-color: #2a2a2a;
+          padding: 25px;
           border-radius: 8px;
           text-align: center;
+          border: 1px solid #3a3a3a;
         }
         .stat-card .number {
-          font-size: 32px;
+          font-size: 36px;
           font-weight: 700;
-          margin-bottom: 5px;
+          margin-bottom: 8px;
         }
         .stat-card .label {
           font-size: 12px;
@@ -126,49 +130,57 @@ const generateAttendanceReportEmail = (
           color: #2196F3;
         }
         .table-section {
-          margin: 25px 0;
+          margin: 30px 0;
         }
         .table-section h3 {
-          color: #FF6B6B;
-          margin-bottom: 15px;
-          font-size: 16px;
+          color: #94cb3d;
+          margin-bottom: 20px;
+          font-size: 18px;
+          font-weight: 600;
         }
         table {
           width: 100%;
           border-collapse: collapse;
-          background-color: #3d3d3d;
+          background-color: #2a2a2a;
+          border-radius: 8px;
+          overflow: hidden;
         }
         th {
-          background-color: #4d4d4d;
-          color: #FF6B6B;
-          padding: 12px;
+          background-color: #3a3a3a;
+          color: #94cb3d;
+          padding: 15px;
           text-align: left;
           font-size: 12px;
           text-transform: uppercase;
           letter-spacing: 0.5px;
+          font-weight: 600;
         }
         td {
-          padding: 12px;
-          border-bottom: 1px solid #4d4d4d;
+          padding: 15px;
+          border-bottom: 1px solid #3a3a3a;
           font-size: 13px;
         }
         tr:last-child td {
           border-bottom: none;
         }
+        tr:hover td {
+          background-color: #3a3a3a;
+        }
         .footer {
-          background-color: #1a1a1a;
-          padding: 20px;
+          background-color: #0f0f0f;
+          padding: 25px;
           text-align: center;
           color: #888;
           font-size: 12px;
+          border-top: 1px solid #2a2a2a;
         }
         .footer p {
-          margin: 5px 0;
+          margin: 8px 0;
         }
         .status-badge {
           display: inline-block;
-          padding: 4px 12px;
-          border-radius: 12px;
+          padding: 6px 14px;
+          border-radius: 20px;
           font-size: 11px;
           font-weight: 600;
         }
@@ -253,7 +265,7 @@ const generateAttendanceReportEmail = (
                 `).join('')}
                 ${attendanceData.length > 10 ? `
                   <tr>
-                    <td colspan="4" style="text-align: center; color: #888; font-style: italic;">
+                    <td colspan="4" style="text-align: center; color: #888; font-style: italic; padding: 20px;">
                       ... and ${attendanceData.length - 10} more records. Please see attached PDF for complete details.
                     </td>
                   </tr>
@@ -262,7 +274,7 @@ const generateAttendanceReportEmail = (
             </table>
           </div>
           
-          <p style="margin-top: 25px;">If you have any questions or need further assistance, please contact the HR department.</p>
+          <p style="margin-top: 30px;">If you have any questions or need further assistance, please contact the HR department.</p>
           
           <p style="margin-top: 20px;">Best regards,<br><strong>Coral Group HR Team</strong></p>
         </div>

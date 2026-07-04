@@ -30,8 +30,11 @@ import reportsRoutes from './reports.routes';
 import mobileRoutes from './mobile.routes';
 import biometricRoutes from './biometric.routes';
 import realtimeAttendanceRoutes from '../../Attendance_Log/routes/realtime-attendance.routes';
+import dashboardRoutes from './dashboard.routes';
+import attendanceMachinesRoutes from './attendance-machines.routes';
 
 const router = Router();
+
 
 router.use('/auth', authRoutes);
 router.use('/employees', employeeRoutes);
@@ -63,5 +66,7 @@ router.use('/reports', reportsRoutes);
 router.use('/mobile', mobileRoutes);
 router.use('/biometric', biometricRoutes);
 router.use('/realtime', realtimeAttendanceRoutes);
+router.use('/dashboard', dashboardRoutes);
+router.use('/attendance-machines', attendanceMachinesRoutes);
 
 export default router;

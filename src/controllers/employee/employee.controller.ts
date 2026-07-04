@@ -7,8 +7,8 @@ export class EmployeeController {
   getAllEmployees = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { departmentId, roleId, shiftId, status, workType, search } = req.query;
-      
-      const filter: any = { role: 'employee' };
+
+      const filter: any = {};
       if (departmentId) filter.departmentId = departmentId;
       if (roleId) filter.roleId = roleId;
       if (shiftId) filter.shiftId = shiftId;

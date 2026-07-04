@@ -670,7 +670,8 @@ export const getMonthlySummary = async (req: Request, res: Response, next: NextF
     const { month, year } = req.query;
 
     const currentYear = year ? parseInt(year as string) : new Date().getFullYear();
-    const currentMonth = month ? parseInt(month as string) : new Date().getMonth();
+    // Frontend sends 1-based month (January = 1). Convert to 0-based for Date constructor.
+    const currentMonth = month ? parseInt(month as string) - 1 : new Date().getMonth();
 
     const startDate = new Date(currentYear, currentMonth, 1);
     const endDate = new Date(currentYear, currentMonth + 1, 0);

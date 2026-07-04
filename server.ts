@@ -11,8 +11,10 @@ const startServer = async () => {
   try {
     await connectDatabase();
     
-    // Verify SMTP connection
-    await verifySMTPConnection();
+    // Verify SMTP connection (non-blocking)
+    verifySMTPConnection().catch((error) => {
+      console.warn('SMTP verification failed (email features may not work):', error.message);
+    });
     
     app.listen(PORT, () => {
       console.log(`Server is running on port http://localhost:${PORT}`);

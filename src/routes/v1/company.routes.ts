@@ -9,6 +9,8 @@ import {
   getCompanyStats,
   updateCompanyStatus,
   assignCompanyAdmin,
+  getCompanySettings,
+  updateCompanySettings,
 } from '../../controllers/company.controller';
 import { authMiddleware } from '../../middleware/auth.middleware';
 import { validate } from '../../middleware/validator.middleware';
@@ -43,6 +45,10 @@ router.get(
   validate,
   getCompanyById
 );
+
+// Company settings routes (must come before /:id routes)
+router.get('/:id/settings', [param('id').isString().notEmpty()], validate, getCompanySettings);
+router.put('/:id/settings', [param('id').isString().notEmpty()], validate, updateCompanySettings);
 
 // POST /api/companies - Create new company
 router.post(

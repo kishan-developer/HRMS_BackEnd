@@ -310,6 +310,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
       message: 'Login successful',
       data: {
         accessToken,
+        refreshToken, // Included for mobile clients (web uses the HTTP-only cookie above)
         user: {
           id: user._id,
           email: user.email,
@@ -349,7 +350,8 @@ export const logout = async (req: Request, res: Response, next: NextFunction) =>
 // Refresh Token
 export const refreshToken = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { refreshToken } = req.cookies;
+    // Accept from cookie (web) or request body (mobile)
+    const refreshToken = req.cookies?.refreshToken || req.body?.refreshToken;
 
     if (!refreshToken) {
       throw new AppError('Refresh token not found', 401, 'NO_REFRESH_TOKEN');

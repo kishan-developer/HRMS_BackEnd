@@ -410,3 +410,75 @@ export const deleteCompany = async (req: Request, res: Response, next: NextFunct
     next(error);
   }
 };
+
+// Get company settings
+export const getCompanySettings = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+
+    const company = await Company.findById(id);
+
+    if (!company) {
+      return res.status(404).json({
+        success: false,
+        error: {
+          code: 'COMPANY_NOT_FOUND',
+          message: 'Company not found',
+        },
+      });
+    }
+
+    return res.json({
+      success: true,
+      data: company.settings || {},
+      message: 'Company settings retrieved successfully',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Update company settings
+export const updateCompanySettings = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    const { settings } = req.body;
+    const userId = (req as any).user?.id;
+
+    const company = await Company.findById(id);
+
+    if (!company) {
+      return res.status(404).json({
+        success: false,
+        error: {
+          code: 'COMPANY_NOT_FOUND',
+          message: 'Company not found',
+        },
+      });
+    }
+
+    company.settings = { ...company.settings, ...settings };
+    await company.save();
+
+    // Log the action
+    await AuditLog.create({
+      userId,
+      action: 'update',
+      module: 'companies',
+      entityType: 'Company',
+      entityId: company.id,
+      description: `Updated company settings: ${company.name}`,
+      ipAddress: req.ip,
+      userAgent: req.get('user-agent'),
+      metadata: { settings },
+    });
+
+    return res.json({
+      success: true,
+      data: company.settings,
+      message: 'Company settings updated successfully',
+    });
+  } catch (error) {
+    next(error);
+  }
+};

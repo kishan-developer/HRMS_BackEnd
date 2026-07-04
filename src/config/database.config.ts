@@ -4,7 +4,13 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/hrms';
 
 export const connectDatabase = async (): Promise<boolean> => {
   try {
-    await mongoose.connect(MONGODB_URI);
+    await mongoose.connect(MONGODB_URI, {
+      serverSelectionTimeoutMS: 30000, // 30 seconds timeout
+      socketTimeoutMS: 45000, // 45 seconds socket timeout
+      connectTimeoutMS: 30000, // 30 seconds connection timeout
+      maxPoolSize: 10,
+      minPoolSize: 5,
+    });
     console.log('MongoDB connection successful');
     return true;
   } catch (error) {

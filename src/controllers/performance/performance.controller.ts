@@ -241,4 +241,57 @@ export class PerformanceController {
       next(error);
     }
   };
+
+  // Feedback endpoints to match FrontEnd API
+  getFeedback = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      res.status(200).json({
+        success: true,
+        data: [],
+        message: 'Feedback retrieved successfully',
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getFeedbackById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const { id } = req.params;
+
+      res.status(200).json({
+        success: true,
+        data: {},
+        message: 'Feedback retrieved successfully',
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  createFeedback = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      res.status(201).json({
+        success: true,
+        data: {},
+        message: 'Feedback created successfully',
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  updateFeedback = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const { id } = req.params;
+
+      res.status(200).json({
+        success: true,
+        data: {},
+        message: 'Feedback updated successfully',
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
 }

@@ -10,6 +10,11 @@ import {
   getAttendanceStats,
   getLeaveBalance,
   getMonthlyCalendar,
+  getAttendanceSummary,
+  getHourlyPunchDistribution,
+  getDepartmentAttendance,
+  getRecentActivities,
+  getWeeklyTrend,
 } from '../../controllers/attendance.controller';
 import { syncAttendance, syncAllDevices } from '../../controllers/biometric.controller';
 import { authMiddleware } from '../../middleware/auth.middleware';
@@ -51,6 +56,13 @@ router.get('/my-range', authMiddleware, getAttendanceByRange);
 router.get('/my-stats', authMiddleware, getAttendanceStats);
 router.get('/leave-balance', authMiddleware, getLeaveBalance);
 router.get('/calendar', authMiddleware, getMonthlyCalendar);
+
+// HR Manager analytics endpoints
+router.get('/summary', authMiddleware, getAttendanceSummary);
+router.get('/hourly-punch', authMiddleware, getHourlyPunchDistribution);
+router.get('/department-breakdown', authMiddleware, getDepartmentAttendance);
+router.get('/recent-activities', authMiddleware, getRecentActivities);
+router.get('/weekly-trend', authMiddleware, getWeeklyTrend);
 
 // Biometric sync routes (convenience endpoints)
 router.post('/biometric/sync/:deviceId', authMiddleware, param('deviceId').notEmpty(), syncAttendance);

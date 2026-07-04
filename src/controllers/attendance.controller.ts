@@ -377,3 +377,184 @@ export const getMonthlyCalendar = async (req: Request, res: Response, next: Next
     next(error);
   }
 };
+
+// Get Attendance Summary (for HR Manager dashboard)
+export const getAttendanceSummary = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+  try {
+    const { startDate, endDate } = req.query;
+
+    // Default to last 30 days if no dates provided
+    const end = endDate ? new Date(endDate as string) : new Date();
+    const start = startDate ? new Date(startDate as string) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    end.setHours(23, 59, 59, 999);
+    start.setHours(0, 0, 0, 0);
+
+    const attendance = await Attendance.find({
+      date: { $gte: start, $lte: end }
+    });
+
+    const summary = {
+      totalEmployees: await User.countDocuments({ role: 'employee' }),
+      presentToday: attendance.filter(a => a.date.toDateString() === new Date().toDateString() && a.status === 'Present').length,
+      absentToday: attendance.filter(a => a.date.toDateString() === new Date().toDateString() && a.status === 'Absent').length,
+      onLeaveToday: attendance.filter(a => a.date.toDateString() === new Date().toDateString() && a.status === 'Leave').length,
+      lateToday: attendance.filter(a => a.date.toDateString() === new Date().toDateString() && a.isLate).length,
+      presentThisMonth: attendance.filter(a => a.status === 'Present').length,
+      absentThisMonth: attendance.filter(a => a.status === 'Absent').length,
+      averageWorkingHours: attendance.length > 0 
+        ? (attendance.reduce((sum, a) => sum + (a.totalHours || 0), 0) / attendance.length).toFixed(2)
+        : 0,
+    };
+
+    return res.json({
+      success: true,
+      data: summary,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Get Hourly Punch Distribution
+export const getHourlyPunchDistribution = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+  try {
+    const { date } = req.query;
+    const queryDate = date ? new Date(date as string) : new Date();
+    queryDate.setHours(0, 0, 0, 0);
+
+    const attendance = await Attendance.find({ date: queryDate });
+
+    const hourlyDistribution = Array.from({ length: 24 }, (_, hour) => ({
+      hour: `${hour}:00`,
+      count: 0,
+    }));
+
+    attendance.forEach(a => {
+      if (a.punchInTime) {
+        const hour = parseInt(a.punchInTime.split(':')[0]);
+        if (hour >= 0 && hour < 24) {
+          hourlyDistribution[hour].count++;
+        }
+      }
+    });
+
+    return res.json({
+      success: true,
+      data: hourlyDistribution,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Get Department Attendance Breakdown
+export const getDepartmentAttendance = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+  try {
+    const { date } = req.query;
+    const queryDate = date ? new Date(date as string) : new Date();
+    queryDate.setHours(0, 0, 0, 0);
+
+    const users = await User.find({ role: 'employee' });
+    const departmentBreakdown: any = {};
+
+    for (const user of users) {
+      const dept = user.department || 'Unassigned';
+      if (!departmentBreakdown[dept]) {
+        departmentBreakdown[dept] = { total: 0, present: 0, absent: 0, late: 0 };
+      }
+      departmentBreakdown[dept].total++;
+
+      const attendance = await Attendance.findOne({
+        userId: user._id.toString(),
+        date: queryDate,
+      });
+
+      if (attendance) {
+        if (attendance.status === 'Present') departmentBreakdown[dept].present++;
+        if (attendance.status === 'Absent') departmentBreakdown[dept].absent++;
+        if (attendance.isLate) departmentBreakdown[dept].late++;
+      }
+    }
+
+    const result = Object.entries(departmentBreakdown).map(([department, stats]: [string, any]) => ({
+      department,
+      ...stats,
+      attendanceRate: stats.total > 0 ? ((stats.present / stats.total) * 100).toFixed(1) : 0,
+    }));
+
+    return res.json({
+      success: true,
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Get Recent Activities
+export const getRecentActivities = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+  try {
+    const { limit = 20 } = req.query;
+
+    const attendance = await Attendance.find()
+      .populate('userId', 'name employeeId department')
+      .sort({ date: -1, punchInTime: -1 })
+      .limit(parseInt(limit as string));
+
+    const activities = attendance.map(a => ({
+      id: a._id,
+      employeeName: (a.userId as any)?.name || 'Unknown',
+      employeeId: (a.userId as any)?.employeeId || 'N/A',
+      department: (a.userId as any)?.department || 'N/A',
+      action: a.punchInTime ? (a.punchOutTime ? 'Checked Out' : 'Checked In') : 'Absent',
+      time: a.punchInTime || a.punchOutTime || 'N/A',
+      date: a.date,
+      status: a.status,
+      isLate: a.isLate,
+    }));
+
+    return res.json({
+      success: true,
+      data: activities,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Get Weekly Trend
+export const getWeeklyTrend = async (_req: Request, res: Response, next: NextFunction): Promise<any> => {
+  try {
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const weeklyData = [];
+
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date();
+      date.setDate(date.getDate() - i);
+      date.setHours(0, 0, 0, 0);
+
+      const nextDate = new Date(date);
+      nextDate.setHours(23, 59, 59, 999);
+
+      const attendance = await Attendance.find({
+        date: { $gte: date, $lte: nextDate }
+      });
+
+      weeklyData.push({
+        day: days[date.getDay()],
+        date: date.toISOString().split('T')[0],
+        present: attendance.filter(a => a.status === 'Present').length,
+        absent: attendance.filter(a => a.status === 'Absent').length,
+        late: attendance.filter(a => a.isLate).length,
+        total: attendance.length,
+      });
+    }
+
+    return res.json({
+      success: true,
+      data: weeklyData,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
