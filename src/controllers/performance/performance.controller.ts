@@ -243,7 +243,7 @@ export class PerformanceController {
   };
 
   // Feedback endpoints to match FrontEnd API
-  getFeedback = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  getFeedback = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       res.status(200).json({
         success: true,
@@ -258,6 +258,7 @@ export class PerformanceController {
   getFeedbackById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { id } = req.params;
+      void id;
 
       res.status(200).json({
         success: true,
@@ -269,7 +270,7 @@ export class PerformanceController {
     }
   };
 
-  createFeedback = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  createFeedback = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       res.status(201).json({
         success: true,
@@ -284,6 +285,7 @@ export class PerformanceController {
   updateFeedback = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { id } = req.params;
+      void id;
 
       res.status(200).json({
         success: true,

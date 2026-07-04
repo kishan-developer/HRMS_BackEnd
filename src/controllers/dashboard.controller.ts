@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 // GPS Summary
-export const getGpsSummary = async (req: Request, res: Response) => {
+export const getGpsSummary = async (_req: Request, res: Response) => {
   try {
     res.status(200).json({
       success: true,
@@ -24,7 +24,7 @@ export const getGpsSummary = async (req: Request, res: Response) => {
 };
 
 // Leave Summary
-export const getLeaveSummary = async (req: Request, res: Response) => {
+export const getLeaveSummary = async (_req: Request, res: Response) => {
   try {
     res.status(200).json({
       success: true,
@@ -47,7 +47,7 @@ export const getLeaveSummary = async (req: Request, res: Response) => {
 };
 
 // Upcoming Holidays
-export const getUpcomingHolidays = async (req: Request, res: Response) => {
+export const getUpcomingHolidays = async (_req: Request, res: Response) => {
   try {
     res.status(200).json({
       success: true,
@@ -89,7 +89,7 @@ export const getPayrollSummary = async (req: Request, res: Response) => {
 };
 
 // Alerts
-export const getAlerts = async (req: Request, res: Response) => {
+export const getAlerts = async (_req: Request, res: Response) => {
   try {
     res.status(200).json({
       success: true,
@@ -109,6 +109,7 @@ export const getAlerts = async (req: Request, res: Response) => {
 export const resolveAlert = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    void id;
     res.status(200).json({
       success: true,
       message: 'Alert resolved successfully',
@@ -123,7 +124,7 @@ export const resolveAlert = async (req: Request, res: Response) => {
 };
 
 // Department Insights
-export const getDepartmentInsights = async (req: Request, res: Response) => {
+export const getDepartmentInsights = async (_req: Request, res: Response) => {
   try {
     res.status(200).json({
       success: true,
@@ -143,6 +144,7 @@ export const getDepartmentInsights = async (req: Request, res: Response) => {
 export const getDepartmentAttendanceByLocation = async (req: Request, res: Response) => {
   try {
     const { location } = req.query;
+    void location;
     res.status(200).json({
       success: true,
       data: [],

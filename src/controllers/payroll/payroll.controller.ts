@@ -449,6 +449,9 @@ export class PayrollController {
     try {
       const { employeeId } = req.params;
       const { month, year } = req.query;
+      void employeeId;
+      void month;
+      void year;
 
       res.status(200).json({
         success: true,
@@ -463,6 +466,7 @@ export class PayrollController {
   approvePayrollById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { id } = req.params;
+      void id;
 
       res.status(200).json({
         success: true,
@@ -476,6 +480,7 @@ export class PayrollController {
   markAsPaid = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { id } = req.params;
+      void id;
 
       res.status(200).json({
         success: true,
@@ -489,6 +494,7 @@ export class PayrollController {
   getSalaryStructure = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { employeeId } = req.params;
+      void employeeId;
 
       res.status(200).json({
         success: true,
@@ -503,6 +509,7 @@ export class PayrollController {
   updateSalaryStructure = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { employeeId } = req.params;
+      void employeeId;
 
       res.status(200).json({
         success: true,
@@ -513,7 +520,7 @@ export class PayrollController {
     }
   };
 
-  getSalaryComponents = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  getSalaryComponents = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       res.status(200).json({
         success: true,
@@ -528,6 +535,8 @@ export class PayrollController {
   getPayrollAdjustments = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { month, year } = req.query;
+      void month;
+      void year;
 
       res.status(200).json({
         success: true,
@@ -539,7 +548,7 @@ export class PayrollController {
     }
   };
 
-  createAdjustment = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  createAdjustment = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       res.status(201).json({
         success: true,
@@ -554,6 +563,7 @@ export class PayrollController {
   deleteAdjustment = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { id } = req.params;
+      void id;
 
       res.status(200).json({
         success: true,

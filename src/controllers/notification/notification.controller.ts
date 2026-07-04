@@ -173,11 +173,13 @@ export class NotificationController {
 
   createNotification = async (userId: string, type: string, title: string, message: string): Promise<void> => {
     await Notification.create({
-      userId,
-      type,
+      audience: {
+        audienceType: 'Specific Employees' as any,
+        employeeIds: [userId],
+      },
+      type: type as any,
       title,
       message,
-      isRead: false,
     });
   };
 

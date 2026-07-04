@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 // Get all attendance machines
-export const getAttendanceMachines = async (req: Request, res: Response) => {
+export const getAttendanceMachines = async (_req: Request, res: Response) => {
   try {
     res.status(200).json({
       success: true,
@@ -21,6 +21,7 @@ export const getAttendanceMachines = async (req: Request, res: Response) => {
 export const getAttendanceMachineById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    void id;
     res.status(200).json({
       success: true,
       data: {},
@@ -36,7 +37,7 @@ export const getAttendanceMachineById = async (req: Request, res: Response) => {
 };
 
 // Add attendance machine
-export const addAttendanceMachine = async (req: Request, res: Response) => {
+export const addAttendanceMachine = async (_req: Request, res: Response) => {
   try {
     res.status(201).json({
       success: true,
@@ -56,6 +57,7 @@ export const addAttendanceMachine = async (req: Request, res: Response) => {
 export const updateAttendanceMachine = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    void id;
     res.status(200).json({
       success: true,
       data: {},
@@ -74,6 +76,7 @@ export const updateAttendanceMachine = async (req: Request, res: Response) => {
 export const deleteAttendanceMachine = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    void id;
     res.status(200).json({
       success: true,
       message: 'Attendance machine deleted successfully',
@@ -91,6 +94,7 @@ export const deleteAttendanceMachine = async (req: Request, res: Response) => {
 export const syncAttendanceMachine = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    void id;
     res.status(200).json({
       success: true,
       message: 'Attendance machine synced successfully',
@@ -105,7 +109,7 @@ export const syncAttendanceMachine = async (req: Request, res: Response) => {
 };
 
 // Test machine connection
-export const testMachineConnection = async (req: Request, res: Response) => {
+export const testMachineConnection = async (_req: Request, res: Response) => {
   try {
     res.status(200).json({
       success: true,
@@ -128,6 +132,7 @@ export const testMachineConnection = async (req: Request, res: Response) => {
 export const getSyncLogs = async (req: Request, res: Response) => {
   try {
     const { machineId } = req.params;
+    void machineId;
     res.status(200).json({
       success: true,
       data: [],

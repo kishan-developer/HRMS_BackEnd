@@ -434,7 +434,7 @@ export const getCompanySettings = async (req: Request, res: Response, next: Next
       message: 'Company settings retrieved successfully',
     });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
 
@@ -479,6 +479,6 @@ export const updateCompanySettings = async (req: Request, res: Response, next: N
       message: 'Company settings updated successfully',
     });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };

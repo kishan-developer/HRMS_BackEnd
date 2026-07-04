@@ -10,7 +10,7 @@ import {
   testMachineConnection,
   getSyncLogs,
 } from '../../controllers/attendance-machine.controller';
-import { body, param } from 'express-validator';
+import { param } from 'express-validator';
 
 const router = Router();
 
