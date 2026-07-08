@@ -42,6 +42,9 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Serve static files (brochures)
+app.use('/brochure', express.static('src/BROCHURE'));
+
 app.get('/health', (_req: Request, res: Response) => {
   res.status(200).json({
     success: true,
