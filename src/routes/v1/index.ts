@@ -32,6 +32,8 @@ import biometricRoutes from './biometric.routes';
 import realtimeAttendanceRoutes from '../../Attendance_Log/routes/realtime-attendance.routes';
 import dashboardRoutes from './dashboard.routes';
 import attendanceMachinesRoutes from './attendance-machines.routes';
+import queryRoutes from './query.routes';
+import brochureRoutes from './brochure.routes';
 
 const router = Router();
 
@@ -68,5 +70,7 @@ router.use('/biometric', biometricRoutes);
 router.use('/realtime', realtimeAttendanceRoutes);
 router.use('/dashboard', dashboardRoutes);
 router.use('/attendance-machines', attendanceMachinesRoutes);
+router.use('/queries', queryRoutes);
+router.use('/brochure', brochureRoutes);
 
 export default router;

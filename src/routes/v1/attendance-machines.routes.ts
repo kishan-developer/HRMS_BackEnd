@@ -9,6 +9,14 @@ import {
   syncAttendanceMachine,
   testMachineConnection,
   getSyncLogs,
+  getDeviceStats,
+  getDeviceConfigurations,
+  uploadDeviceLogo,
+  saveDeviceConfiguration,
+  testRealDeviceConnection,
+  getDeviceUsers,
+  getDeviceAttendanceLogs,
+  syncDeviceAttendanceLogs,
 } from '../../controllers/attendance-machine.controller';
 import { param } from 'express-validator';
 
@@ -40,5 +48,17 @@ router.post('/machines/test-connection', testMachineConnection);
 
 // Get sync logs
 router.get('/machines/:machineId/sync-logs', param('machineId').notEmpty(), getSyncLogs);
+
+// Device management endpoints
+router.get('/devices/stats', getDeviceStats);
+router.get('/devices/configurations', getDeviceConfigurations);
+router.post('/devices/logo', uploadDeviceLogo);
+router.post('/devices/configuration', saveDeviceConfiguration);
+
+// Real device connection endpoints
+router.post('/devices/test-connection', testRealDeviceConnection);
+router.get('/devices/:id/users', param('id').notEmpty(), getDeviceUsers);
+router.get('/devices/:id/logs', param('id').notEmpty(), getDeviceAttendanceLogs);
+router.post('/devices/:id/sync-logs', param('id').notEmpty(), syncDeviceAttendanceLogs);
 
 export default router;
