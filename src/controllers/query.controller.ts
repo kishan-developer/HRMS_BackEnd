@@ -354,7 +354,7 @@ export const createQuery = async (
 
     const adminMailOptions = {
       from: `"Coral Group Website" <${process.env.SMTP_USER}>`,
-      to: process.env.ADMIN_EMAIL || "info@coral-group.in",
+      to: process.env.ADMIN_EMAIL || "admin@coral-group.in",
       replyTo: `"${clientName}" <${email}>`,
       subject: `New Query Lead: ${clientName} — ${propertyInterest}`,
       html: adminMailHtml,

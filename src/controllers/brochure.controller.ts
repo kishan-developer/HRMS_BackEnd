@@ -367,7 +367,7 @@ export const submitBrochureRequest = async (
 
     const adminMailOptions = {
       from: `"Coral Group Website" <${process.env.SMTP_USER}>`,
-      to: process.env.ADMIN_EMAIL || "info@coral-group.in",
+      to: process.env.ADMIN_EMAIL || "admin@coral-group.in",
       replyTo: `"${name}" <${email}>`,
       subject: `New Brochure Lead: ${name} — ${brochureTitle}`,
       html: adminMailHtml,
