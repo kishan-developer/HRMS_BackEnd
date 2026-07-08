@@ -2,6 +2,7 @@ import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
+import path from 'path';
 
 import routes from './src/routes';
 import {
@@ -43,7 +44,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Serve static files (brochures)
-app.use('/brochure', express.static('src/BROCHURE'));
+const brochurePath = process.env.NODE_ENV === 'production' 
+  ? path.join(__dirname, '../src/BROCHURE')
+  : path.join(__dirname, 'src/BROCHURE');
+app.use('/brochure', express.static(brochurePath));
 
 app.get('/health', (_req: Request, res: Response) => {
   res.status(200).json({
