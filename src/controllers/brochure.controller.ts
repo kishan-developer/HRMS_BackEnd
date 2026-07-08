@@ -1,14 +1,13 @@
-const asyncHandler = require("express-async-handler");
-const nodemailer = require("nodemailer");
-const fs = require("fs");
-const path = require("path");
-const BrochureRequest = require("../models/brochure-request.model");
+import { Request, Response, NextFunction } from 'express';
+import nodemailer from 'nodemailer';
+import path from 'path';
+import { BrochureRequest } from '../models/brochure-request.model';
 
 // Email configuration
 const createTransporter = () => {
   return nodemailer.createTransport({
     host: process.env.SMTP_HOST || "smtp.gmail.com",
-    port: parseInt(process.env.SMTP_PORT) || 587,
+    port: parseInt(process.env.SMTP_PORT || "587"),
     secure: false,
     auth: {
       user: process.env.SMTP_USER,
@@ -20,12 +19,10 @@ const createTransporter = () => {
   });
 };
 
-const SITE_URL = process.env.SITE_URL || "http://localhost:3000";
-const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:2000";
 const LOGO_URL = "cid:coral-logo";
 
 // User Email Template
-const getUserEmailTemplate = (variables) => {
+const getUserEmailTemplate = (variables: any) => {
   const { NAME, BROCHURE_TITLE, EMAIL, PHONE, ADDRESS, PROJECT_TYPE, BUDGET_ROW, MESSAGE_ROW } = variables;
   return `<!DOCTYPE html>
 <html lang="en">
@@ -133,7 +130,7 @@ const getUserEmailTemplate = (variables) => {
 };
 
 // Admin Email Template
-const getAdminEmailTemplate = (variables) => {
+const getAdminEmailTemplate = (variables: any) => {
   const { NAME, EMAIL, PHONE, ADDRESS, PROJECT_TYPE, BUDGET_ROW, MESSAGE_ROW, BROCHURE_TITLE, BROCHURE_TYPE, TIMESTAMP } = variables;
   return `<!DOCTYPE html>
 <html lang="en">
@@ -270,36 +267,25 @@ const getAdminEmailTemplate = (variables) => {
 };
 
 // Submit brochure request
-exports.submitBrochureRequest = asyncHandler(async (req, res) => {
-  const { name, email, phone, address, message, budget, projectType, brochureType, brochureTitle } = req.body;
+export const submitBrochureRequest = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { name, email, phone, address, message, budget, projectType, brochureType, brochureTitle } = req.body;
 
-  // Validate required fields
-  if (!name || !email || !phone || !address || !projectType || !brochureType || !brochureTitle) {
-    return res.status(400).json({
-      success: false,
-      message: "Please provide all required fields",
-    });
-  }
+    // Validate required fields
+    if (!name || !email || !phone || !address || !projectType || !brochureType || !brochureTitle) {
+      res.status(400).json({
+        success: false,
+        message: "Please provide all required fields",
+      });
+      return;
+    }
 
-  // Save to database
-  const brochureRequest = await BrochureRequest.create({
-    name,
-    email,
-    phone,
-    address,
-    message,
-    budget,
-    projectType,
-    brochureType,
-    brochureTitle,
-  });
-
-  // Respond to client immediately after DB save
-  res.status(200).json({
-    success: true,
-    message: "Brochure request submitted successfully. Please check your email for confirmation.",
-    data: {
-      _id: brochureRequest._id,
+    // Save to database
+    const brochureRequest = await BrochureRequest.create({
       name,
       email,
       phone,
@@ -309,80 +295,100 @@ exports.submitBrochureRequest = asyncHandler(async (req, res) => {
       projectType,
       brochureType,
       brochureTitle,
-    },
-  });
+    });
 
-  // Send emails in background (non-blocking - won't affect client response)
-  if (!process.env.SMTP_USER || !process.env.SMTP_PASSWORD) {
-    console.warn("Email credentials not set (SMTP_USER / SMTP_PASSWORD). Skipping email send.");
-    return;
+    // Respond to client immediately after DB save
+    res.status(200).json({
+      success: true,
+      message: "Brochure request submitted successfully. Please check your email for confirmation.",
+      data: {
+        _id: brochureRequest._id,
+        name,
+        email,
+        phone,
+        address,
+        message,
+        budget,
+        projectType,
+        brochureType,
+        brochureTitle,
+      },
+    });
+
+    // Send emails in background (non-blocking - won't affect client response)
+    if (!process.env.SMTP_USER || !process.env.SMTP_PASSWORD) {
+      console.warn("Email credentials not set (SMTP_USER / SMTP_PASSWORD). Skipping email send.");
+      return;
+    }
+
+    const transporter = createTransporter();
+
+    // Prepare template variables
+    const budgetRow = budget ? `<tr><td style="color:#606060;font-size:13px;padding:12px 0;border-bottom:1px solid #2a2a2a;">Budget</td><td style="color:#94cb3d;font-size:14px;padding:12px 0;border-bottom:1px solid #2a2a2a;font-weight:600;">${budget}</td></tr>` : '';
+    const messageRow = message ? `<tr><td style="color:#606060;font-size:13px;padding:12px 0;vertical-align:top;">Message</td><td style="color:#ffffff;font-size:14px;padding:12px 0;">${message}</td></tr>` : '';
+
+    const userMailHtml = getUserEmailTemplate({
+      NAME: name,
+      BROCHURE_TITLE: brochureTitle,
+      EMAIL: email,
+      PHONE: phone,
+      ADDRESS: address,
+      PROJECT_TYPE: projectType.toUpperCase(),
+      BUDGET_ROW: budgetRow,
+      MESSAGE_ROW: messageRow
+    });
+
+    const adminMailHtml = getAdminEmailTemplate({
+      NAME: name,
+      EMAIL: email,
+      PHONE: phone,
+      ADDRESS: address,
+      PROJECT_TYPE: projectType.toUpperCase(),
+      BUDGET_ROW: budgetRow,
+      MESSAGE_ROW: messageRow,
+      BROCHURE_TITLE: brochureTitle,
+      BROCHURE_TYPE: brochureType,
+      TIMESTAMP: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
+    });
+
+    const userMailOptions = {
+      from: `"Coral Group" <${process.env.SMTP_USER}>`,
+      to: email,
+      subject: `Your ${brochureTitle} Brochure Request - Coral Group`,
+      html: userMailHtml,
+      attachments: [
+        {
+          filename: 'CORALGREEN.JPG',
+          path: path.join(__dirname, '../image/CORALGREEN.JPG'),
+          cid: 'coral-logo'
+        }
+      ]
+    };
+
+    const adminMailOptions = {
+      from: `"Coral Group Website" <${process.env.SMTP_USER}>`,
+      to: process.env.ADMIN_EMAIL || "info@coral-group.in",
+      replyTo: `"${name}" <${email}>`,
+      subject: `New Brochure Lead: ${name} — ${brochureTitle}`,
+      html: adminMailHtml,
+      attachments: [
+        {
+          filename: 'CORALGREEN.JPG',
+          path: path.join(__dirname, '../image/CORALGREEN.JPG'),
+          cid: 'coral-logo'
+        }
+      ]
+    };
+
+    Promise.all([
+      transporter.sendMail(userMailOptions),
+      transporter.sendMail(adminMailOptions),
+    ]).then(() => {
+      console.log(`Emails sent successfully for brochure request: ${email}`);
+    }).catch((emailError) => {
+      console.error("Email sending failed:", emailError.message);
+    });
+  } catch (error) {
+    next(error);
   }
-
-  const transporter = createTransporter();
-
-  // Prepare template variables
-  const budgetRow = budget ? `<tr><td style="color:#606060;font-size:13px;padding:12px 0;border-bottom:1px solid #2a2a2a;">Budget</td><td style="color:#94cb3d;font-size:14px;padding:12px 0;border-bottom:1px solid #2a2a2a;font-weight:600;">${budget}</td></tr>` : '';
-  const messageRow = message ? `<tr><td style="color:#606060;font-size:13px;padding:12px 0;vertical-align:top;">Message</td><td style="color:#ffffff;font-size:14px;padding:12px 0;">${message}</td></tr>` : '';
-
-  const userMailHtml = getUserEmailTemplate({
-    NAME: name,
-    BROCHURE_TITLE: brochureTitle,
-    EMAIL: email,
-    PHONE: phone,
-    ADDRESS: address,
-    PROJECT_TYPE: projectType.toUpperCase(),
-    BUDGET_ROW: budgetRow,
-    MESSAGE_ROW: messageRow
-  });
-
-  const adminMailHtml = getAdminEmailTemplate({
-    NAME: name,
-    EMAIL: email,
-    PHONE: phone,
-    ADDRESS: address,
-    PROJECT_TYPE: projectType.toUpperCase(),
-    BUDGET_ROW: budgetRow,
-    MESSAGE_ROW: messageRow,
-    BROCHURE_TITLE: brochureTitle,
-    BROCHURE_TYPE: brochureType,
-    TIMESTAMP: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
-  });
-
-  const userMailOptions = {
-    from: `"Coral Group" <${process.env.SMTP_USER}>`,
-    to: email,
-    subject: `Your ${brochureTitle} Brochure Request - Coral Group`,
-    html: userMailHtml,
-    attachments: [
-      {
-        filename: 'CORALGREEN.JPG',
-        path: path.join(__dirname, '../image/CORALGREEN.JPG'),
-        cid: 'coral-logo'
-      }
-    ]
-  };
-
-  const adminMailOptions = {
-    from: `"Coral Group Website" <${process.env.SMTP_USER}>`,
-    to: process.env.ADMIN_EMAIL || "info@coral-group.in",
-    replyTo: `"${name}" <${email}>`,
-    subject: `New Brochure Lead: ${name} — ${brochureTitle}`,
-    html: adminMailHtml,
-    attachments: [
-      {
-        filename: 'CORALGREEN.JPG',
-        path: path.join(__dirname, '../image/CORALGREEN.JPG'),
-        cid: 'coral-logo'
-      }
-    ]
-  };
-
-  Promise.all([
-    transporter.sendMail(userMailOptions),
-    transporter.sendMail(adminMailOptions),
-  ]).then(() => {
-    console.log(`Emails sent successfully for brochure request: ${email}`);
-  }).catch((emailError) => {
-    console.error("Email sending failed:", emailError.message);
-  });
-});
+};
