@@ -2,7 +2,7 @@ const asyncHandler = require("express-async-handler");
 const nodemailer = require("nodemailer");
 const fs = require("fs");
 const path = require("path");
-const BrochureRequest = require("../model/BrochureRequest.model");
+const BrochureRequest = require("../models/brochure-request.model");
 
 // Email configuration
 const createTransporter = () => {
